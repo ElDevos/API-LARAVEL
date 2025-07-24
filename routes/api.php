@@ -17,11 +17,7 @@ Route::middleware('jwt')->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/updateuser', [AuthController::class, 'updateUser']);
-    Route::apiResource('laboratorio', LaboratorioController::class);
+   
 });
-
-/*Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');*/
 
 

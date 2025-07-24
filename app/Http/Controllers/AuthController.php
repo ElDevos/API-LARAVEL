@@ -57,9 +57,7 @@ class AuthController extends Controller
             'mensaje'=>'Login exitoso',
             'token' => $token,
             'user' => auth()->user(),
-            //'expires_in' => auth('api')->factory()->getTTL() * 60,
-            //'expires_in' => Auth::factory()->getTTL() * 60,
-            'expires_in' => 2
+            'expires_in' => JWTAuth::factory()->getTTL() * 60 //expira en 60 minutos
         ]);
     }
 
