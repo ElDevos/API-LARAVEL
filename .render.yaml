@@ -4,11 +4,14 @@ services:
     env: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    buildCommand: ""
     startCommand: php artisan serve --host=0.0.0.0 --port=8000
     envVars:
       - key: APP_ENV
         value: production
+      - key: APP_DEBUG
+        value: true
+      - key: APP_URL
+        value: https://laravel-api.onrender.com
       - key: APP_KEY
         generateValue: true
       - key: DB_CONNECTION
@@ -31,6 +34,10 @@ services:
         fromDatabase:
           name: laravel-db
           property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: JWT_SECRET
+        value: IKWuSiuETUxTAf7Mdb2R05vXuWI8zDUSyxOdKyx73Pkyrb1TrQY1MXJhxFwbQe1A
 
 databases:
   - name: laravel-db
