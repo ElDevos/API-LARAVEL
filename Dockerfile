@@ -1,23 +1,29 @@
 FROM php:8.2-fpm
 
-WORKDIR /var/www
-
+# Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
-    zip unzip curl git libxml2-dev libzip-dev libpng-dev libjpeg-dev libonig-dev \
-    sqlite3 libsqlite3-dev
+    git curl zip unzip \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libonig-dev libxml2-dev libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd
 
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
-
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY . /var/www
-COPY --chown=www-data:www-data . /var/www
+# Establece el directorio de trabajo
+WORKDIR /var/www
 
-RUN chmod -R 755 /var/www
-RUN composer install
+# Copia los archivos del proyecto
+COPY . .
 
-COPY .env.example .env
-RUN php artisan key:generate
+# Instala dependencias de PHP
+RUN composer install --no-dev --optimize-autoloader
 
+# Da permisos
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
+
+# Expone el puerto
 EXPOSE 8000
+
+# Arranque con el servidor embebido de Laravel
 CMD php artisan serve --host=0.0.0.0 --port=8000
