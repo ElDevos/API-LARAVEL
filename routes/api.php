@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\JwtMiddleware;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return response()->json(['message' => 'Hello world!']);
@@ -19,5 +20,8 @@ Route::middleware('jwt')->group(function () {
     Route::put('/updateuser', [AuthController::class, 'updateUser']);
    
 });
-
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('/orders/{user_id}', [OrderController::class, 'getUserOrders']);
+    Route::put('/order', [OrderController::class, 'storeOrder']);
+});
 
